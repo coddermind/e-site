@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Summary</title>
+    <style>
+        /* Overall container */
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+
+        /* Box styling */
+        .order-box {
+            background-color: #f2f2f2;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+
+        /* Table styling */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        /* Total section */
+        .total {
+            text-align: right;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <button 
+        id="hoverButton" 
+        style="padding: 10px 20px; font-size: 16px; text-align: center; background-color: #008CBA; border: none; color: white; cursor: pointer; transition: background-color 0.3s ease;"
+        onmouseover="this.style.backgroundColor='#005f73'; this.querySelector('a').style.color='#ffffff';"
+        onmouseout="this.style.backgroundColor='#008CBA'; this.querySelector('a').style.color='inherit';">
+        <a href="{% url 'index' %}" style="text-decoration: none; color: inherit; display: inline-block; width: 100%;">Home</a>
+    </button>
+    {% if zipped_data %}
+    <div class="container">
+        <div class="order-box">
+            <h2>Order Placed</h2>
+            <p><strong>Order ID:</strong> {{ order_id }}</p>
+            <p><strong>Name:</strong> {{ first_name }} {{ last_name }}</p>
+            <p><strong>Email:</strong> {{ email }}</p>
+            <p><strong>Date:</strong> {{ date }}</p>
+            <p><strong>Phone Number:</strong> {{ phone }}</p>
+            <p><strong>Address:</strong> {{ address }}</p>
+            
+            <!-- Order items table -->
+            <table>
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Quantity</th>
+                        <th>Unit Price</th>
+                        <th>Total Price</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for id, name, price, total_price, quantity in zipped_data %}
+                    <tr>
+                        <td>{{ name }}</td>
+                        <td>{{ quantity }}</td>
+                        <td>{{ price }}</td>
+                        <td>{{ total_price }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Total bill -->
+        <div class="total">
+            <strong>Total Bill: </strong>Rs.{{ gross_total }}
+        </div>
+    </div>
+    {% else %}
+    <h1>Your order placed successfully</h1>
+    {% endif %}
+</body>
+</html>

@@ -1,0 +1,398 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+  <!-- Basic -->
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <!-- Mobile Metas -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <!-- Site Metas -->
+  <link rel="icon" href="{% static 'images/favicon.png' %}" type="image/gif" />
+  <meta name="keywords" content="" />
+  <meta name="description" content="" />
+  <meta name="author" content="" />
+
+  <title>Healet</title>
+  
+  <!-- bootstrap core css -->
+  <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.css' %}" />
+  <!-- font awesome style -->
+  <link href="{% static 'css/font-awesome.min.css' %}" rel="stylesheet" />
+  <!-- Custom styles for this template -->
+  <link href="{% static 'css/style.css' %}" rel="stylesheet" />
+  <!-- responsive style -->
+  <link href="{% static 'css/responsive.css' %}" rel="stylesheet" />
+
+</head>
+
+<body>
+
+  <!-- header section strats -->
+  <header class="header_section">
+    <div class="container-fluid">
+      <nav class="navbar navbar-expand-lg custom_nav-container">
+        <a class="navbar-brand" href="{% url 'index' %}">
+          <span>
+            Cartify
+          </span>
+        </a>
+        <div class="" id="">
+
+          <div class="custom_menu-btn">
+            <button onclick="openNav()">
+              <span class="s-1"> </span>
+              <span class="s-2"> </span>
+              <span class="s-3"> </span>
+            </button>
+            <div id="myNav" class="overlay">
+              <div class="overlay-content">
+                <a href="{% url 'cart' %}" style="position: relative; display: inline-block;">
+                  <img src="{% static 'images/cart.png' %}" alt="cart" style="background-color: white;">
+                  <p style="position: absolute; top: -30px; right: -20px; background-color: red; color: white; border-radius: 50%; padding: 5px 10px;">
+                    {{count_products}}
+                  </p>
+                </a>
+                <a href="{% url 'index' %}">Home</a>
+                <a href="{% url 'shop' %}">Shop</a>
+                {% if user.is_authenticated %}
+                  <a href="{% url 'logout_user' %}">Logout</a>
+                {% else %}
+                  <a href="{% url 'login_user' %}">Login</a>
+                  <a href="{% url 'register_user' %}">Register</a>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </nav>
+    </div>
+  </header>
+  <!-- end header section -->
+
+  <!-- slider section -->
+  <section class="slider_section position-relative">
+    <div class="slider_bg_box">
+      <img src="{% static 'images/Logo.png' %}" alt="">
+    </div>
+    <div class="slider_bg"></div>
+    <div class="container">
+      <div class="col-md-9 col-lg-8">
+        <div class="detail-box">
+          <h1>
+            Welcome {% if user.is_authenticated %}{{request.user.first_name}} {{request.user.last_name}}{% endif %}
+            <br> to Cartify
+          </h1>
+          <p>
+            your ultimate online shopping destination!
+            Discover amazing deals and a wide variety of products tailored just for you
+          </p>
+          <div>
+            <a href="{% url 'shop' %}" class="slider-link">
+              Shop Now
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- end slider section -->
+
+  <!-- shop section -->
+
+  <section class="shop_section layout_padding">
+    <div class="container">
+      <div class="heading_container heading_center">
+        <h2>
+          Latest Products
+        </h2>
+      </div>
+      <div class="row">
+        {% for product in all_products %}
+            <div class="col-sm-6 col-md-4 col-lg-3">
+            <div class="box">
+                <a href="{% url 'details' id=product.id %}">
+                <div class="img-box">
+                    <img src="{{product.image_1.url}}" alt="">
+                </div>
+                <div class="detail-box">
+                    <h6>
+                    {{product.name}}
+                    </h6>
+                    <h6>
+                    
+                    <span>
+                        Rs.{{product.price}}
+                    </span>
+                    </h6>
+                </div>
+                <div class="new">
+                    <span>
+                        {% if product.id not in product_ids_list %}
+                            <a href="{% url 'add_to_cart' id=product.id %}">Add</a>
+                        {% else %}
+                            <a href="{% url 'remove_from_cart' id=product.id %}">Added</a>
+                        {% endif %}
+                    </span>
+                </div>
+                </a>
+            </div>
+            </div>
+        {% endfor %}
+        
+      </div>
+      <div class="btn-box">
+        <a href="{% url 'shop' %}">View all Products</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- end shop section -->
+
+  <!-- about section -->
+
+  <section class="about_section  ">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="img-box">
+            <img src="{% static 'images/about-img.jpg' %}" alt="">
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="detail-box">
+            <div class="heading_container">
+              <h2>
+                About Us
+              </h2>
+            </div>
+            <p>
+              At Cartify, we believe in transforming the online shopping experience by offering a seamless, enjoyable, and personalized journey for every customer. Our mission is to provide a diverse range of high-quality products at unbeatable prices, ensuring that you find exactly what you're looking for with ease. With a commitment to exceptional customer service, fast shipping, and secure transactions, Cartify is dedicated to making your shopping experience not just satisfactory, but truly delightful. Join us as we redefine convenience and satisfaction in the world of e-commerce
+            </p>
+            <a href="">
+              Read More
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- end about section -->
+
+  <!-- client section -->
+
+  <section class="client_section layout_padding">
+    <div class="container">
+      <div class="heading_container">
+        <h2>
+          Testimonial
+        </h2>
+      </div>
+      <div id="carouselExample2Controls" class="carousel slide" data-ride="carousel">
+        <div class="carousel-inner">
+          <div class="carousel-item active">
+            <div class="row">
+              <div class="col-md-11 col-lg-10 mx-auto">
+                <div class="box">
+                  <div class="img-box">
+                    <img src="{% static 'images/client.jpg' %}" alt="" />
+                  </div>
+                  <div class="detail-box">
+                    <div class="name">
+                      <h6>
+                        Samantha Jonas
+                      </h6>
+                    </div>
+                    <p>
+                      It is a long established fact that a reader will be
+                      distracted by the readable cIt is a long established fact
+                      that a reader will be distracted by the readable c
+                    </p>
+                    <i class="fa fa-quote-left" aria-hidden="true"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="carousel-item">
+            <div class="row">
+              <div class="col-md-11 col-lg-10 mx-auto">
+                <div class="box">
+                  <div class="img-box">
+                    <img src="{% static 'images/client.jpg' %}" alt="" />
+                  </div>
+                  <div class="detail-box">
+                    <div class="name">
+                      <h6>
+                        Samantha Jonas
+                      </h6>
+                    </div>
+                    <p>
+                      It is a long established fact that a reader will be
+                      distracted by the readable cIt is a long established fact
+                      that a reader will be distracted by the readable c
+                    </p>
+                    <i class="fa fa-quote-left" aria-hidden="true"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="carousel-item">
+            <div class="row">
+              <div class="col-md-11 col-lg-10 mx-auto">
+                <div class="box">
+                  <div class="img-box">
+                    <img src="{% static 'images/client.jpg' %}" alt="" />
+                  </div>
+                  <div class="detail-box">
+                    <div class="name">
+                      <h6>
+                        Samantha Jonas
+                      </h6>
+                    </div>
+                    <p>
+                      It is a long established fact that a reader will be
+                      distracted by the readable cIt is a long established fact
+                      that a reader will be distracted by the readable c
+                    </p>
+                    <i class="fa fa-quote-left" aria-hidden="true"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="carousel_btn-container">
+          <a class="carousel-control-prev" href="#carouselExample2Controls" role="button" data-slide="prev">
+            <i class="fa fa-long-arrow-left" aria-hidden="true"></i>
+            <span class="sr-only">Previous</span>
+          </a>
+          <a class="carousel-control-next" href="#carouselExample2Controls" role="button" data-slide="next">
+            <i class="fa fa-long-arrow-right" aria-hidden="true"></i>
+            <span class="sr-only">Next</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- end client section -->
+
+  <!-- info section -->
+  <section class="info_section layout_padding2">
+    <div class="container">
+      <div class="row info_form_social_row">
+        <!-- <div class="col-md-8 col-lg-9">
+          <div class="info_form">
+            <form action="">
+              <input type="email" placeholder="Enter your email">
+              <button>
+                <i class="fa fa-arrow-right" aria-hidden="true"></i>
+              </button>
+            </form>
+          </div>
+        </div> -->
+        <div class="col-md-4 col-lg-3">
+
+          <div class="social_box">
+            <a href="">
+              <i class="fa fa-facebook" aria-hidden="true"></i>
+            </a>
+            <a href="">
+              <i class="fa fa-instagram" aria-hidden="true"></i>
+            </a>
+            <a href="https://wa.me/923065516830" target="_blank">
+              <i class="fa fa-whatsapp" aria-hidden="true"></i>
+            </a>
+            <a href="mailto:hacodder@gmail.com">
+              <i class="fa fa-envelope" aria-hidden="true"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="row info_main_row">
+        <div class="col-md-6 col-lg-3">
+          <div class="info_links">
+            <h4>
+              Menu
+            </h4>
+            <div class="info_links_menu">
+              <a href="{% url 'index' %}">Home</a>
+              <a href="{% url 'shop' %}">Shop</a>
+              <a href="{% url 'cart' %}">Cart</a>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-3">
+        </div>
+        <div class="col-md-6 col-lg-3">
+          <div class="info_detail">
+            <h4>
+              About Us
+            </h4>
+            <p class="mb-0">
+              Our mission is to provide a diverse range of high-quality products at unbeatable prices, ensuring that you find exactly what you're looking for with ease.
+            </p>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-3">
+          <h4>
+            Contact Us
+          </h4>
+          <div class="info_contact">
+            <a href="https://www.google.com/maps/place/Alnamaa+Accounting+%26+Bookkeeping+LLC/@25.26615,55.3106126,17z/data=!3m1!4b1!4m6!3m5!1s0x3e5f437d2f3bcfd9:0xd213a756689e8e71!8m2!3d25.26615!4d55.3106126!16s%2Fg%2F11jjls6g16?entry=ttu" target="_blank">
+              <i class="fa fa-map-marker" aria-hidden="true"></i>
+              <span>
+                Location
+              </span>
+            </a>
+            <a href="tel:+923065516830" target="_blank">
+              <i class="fa fa-phone" aria-hidden="true"></i>
+              <span>
+                Call +923065516830
+              </span>
+            </a>
+            <a href="mailto:hacodder@gmail.com" target="_blank">
+              <i class="fa fa-envelope"></i>
+              <span>
+                hacodder@gmail.com
+              </span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- end info_section -->
+
+
+  <!-- footer section -->
+  <footer class="footer_section">
+    <div class="container">
+      <p>
+        &copy; <span id="displayYear"></span> All Rights Reserved By
+        <a href="{% url 'index' %}">Cartify</a>
+      </p>
+    </div>
+  </footer>
+  <!-- footer section -->
+
+
+  <!-- jQery -->
+  <script src="{% static 'js/jquery-3.4.1.min.js' %}"></script>
+  <!-- bootstrap js -->
+  <script src="{% static 'js/bootstrap.js' %}"></script>
+  <!-- custom js -->
+  <script src="{% static 'js/custom.js' %}"></script>
+
+  <script src="{% static 'js/same_location_page.js' %}"></script>
+
+</body>
+
+</html>

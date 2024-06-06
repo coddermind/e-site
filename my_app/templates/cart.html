@@ -1,0 +1,251 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+  <!-- Basic -->
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <!-- Mobile Metas -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <!-- Site Metas -->
+  <link rel="icon" href="{% static 'images/favicon.png' %}" type="image/gif" />
+  <meta name="keywords" content="" />
+  <meta name="description" content="" />
+  <meta name="author" content="" />
+
+  <title>Healet</title>
+
+  <!-- bootstrap core css -->
+  <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.css' %}" />
+  <!-- font awesome style -->
+  <link href="{% static 'css/font-awesome.min.css' %}" rel="stylesheet" />
+  <!-- Custom styles for this template -->
+  <link href="{% static 'css/style.css' %}" rel="stylesheet" />
+  <!-- responsive style -->
+  <link href="{% static 'css/responsive.css' %}" rel="stylesheet" />
+
+</head>
+
+<body>
+
+  <!-- header section strats -->
+  <header class="header_section innerpage_header">
+    <div class="container-fluid">
+      <nav class="navbar navbar-expand-lg custom_nav-container">
+        <a class="navbar-brand" href="{% url 'index' %}">
+          <span>
+            Cartify
+          </span>
+        </a>
+        <div class="" id="">
+
+          <div class="custom_menu-btn">
+            <button onclick="openNav()">
+              <span class="s-1"> </span>
+              <span class="s-2"> </span>
+              <span class="s-3"> </span>
+            </button>
+            <div id="myNav" class="overlay">
+              <div class="overlay-content">
+                <a href="{% url 'index' %}">Home</a>
+                <a href="{% url 'shop' %}">Shop</a>
+                {% if user.is_authenticated %}
+                  <a href="{% url 'logout_user' %}">Logout</a>
+                {% else %}
+                  <a href="{% url 'login_user' %}">Login</a>
+                  <a href="{% url 'register_user' %}">Register</a>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </nav>
+    </div>
+  </header>
+  <!-- end header section -->
+
+  <!-- blog section -->
+
+  <section class="blog_section layout_padding">
+    <div class="container">
+      <div class="heading_container">
+        <h2>
+          Cart Products
+        </h2>
+      </div>
+      {% if cart_products and all_products %}
+      <div class="row">
+        
+        {% for id, qty in cart_products %}
+            {% for product in all_products %}
+                {% if product.id == id %}
+                    <div class="col-md-6">
+                        <div class="box">
+                            <div class="img-box">
+                            <img src="{{product.image_1.url}}" alt="">
+                            <h4 class="blog_date">
+                                Qty <br>
+                                {{qty}}
+                            </h4>
+                            </div>
+                            <div class="detail-box">
+                            <h5>
+                                {{product.name}}
+                            </h5>
+                            
+                                <!-- Add to Cart button with dynamic URL -->
+                                {% if product.id not in product_ids_list %}
+                                    <!-- Note: Replace 'a' tag with 'button' tag -->
+                                    <button class="add-to-cart-btn" data-product-id="{{ product.id }}">Add</button><br><br>
+                                {% else %}
+                                    <button class="remove-from-cart-btn" data-product-id="{{ product.id }}">Remove</button><br><br>
+                                {% endif %}
+                            
+                            <form id="form_{{ product.id }}" method="post" onsubmit="submitForm(event, '{{ product.id }}')">
+                                {% csrf_token %}
+                                <input type="number" name="quantity_{{ product.id }}" placeholder="Qty: {{ qty }}" min="1" required>
+                                <button type="submit">Update</button>
+                            </form>
+                            
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        {% endfor %}
+        
+      </div>
+      <br>
+      <div style="display: flex; justify-content: center; margin-top: 20px;">
+        <button 
+            id="hoverButton" 
+            style="padding: 10px 20px; font-size: 16px; text-align: center; background-color: #008CBA; border: none; color: white; cursor: pointer; transition: background-color 0.3s ease;"
+            onmouseover="this.style.backgroundColor='#005f73'; this.querySelector('a').style.color='#ffffff';"
+            onmouseout="this.style.backgroundColor='#008CBA'; this.querySelector('a').style.color='inherit';">
+            <a href="{% url 'delivery_details' %}" style="text-decoration: none; color: inherit; display: inline-block; width: 100%;">Add delivery details</a>
+        </button>
+    </div>
+      {% else %}
+        <h3>Your cart is empty.</h3>
+      {% endif %}
+    </div>
+  </section>
+
+  <!-- end blog section -->
+
+  <!-- info section -->
+  <section class="info_section layout_padding2">
+    <div class="container">
+      <div class="row info_form_social_row">
+        <!-- <div class="col-md-8 col-lg-9">
+          <div class="info_form">
+            <form action="">
+              <input type="email" placeholder="Enter your email">
+              <button>
+                <i class="fa fa-arrow-right" aria-hidden="true"></i>
+              </button>
+            </form>
+          </div>
+        </div> -->
+        <div class="col-md-4 col-lg-3">
+
+          <div class="social_box">
+            <a href="">
+              <i class="fa fa-facebook" aria-hidden="true"></i>
+            </a>
+            <a href="">
+              <i class="fa fa-instagram" aria-hidden="true"></i>
+            </a>
+            <a href="https://wa.me/923065516830" target="_blank">
+              <i class="fa fa-whatsapp" aria-hidden="true"></i>
+            </a>
+            <a href="mailto:hacodder@gmail.com">
+              <i class="fa fa-envelope" aria-hidden="true"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="row info_main_row">
+        <div class="col-md-6 col-lg-3">
+          <div class="info_links">
+            <h4>
+              Menu
+            </h4>
+            <div class="info_links_menu">
+              <a href="{% url 'index' %}">Home</a>
+              <a href="{% url 'shop' %}">Shop</a>
+              <a href="{% url 'cart' %}">Cart</a>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-3">
+        </div>
+        <div class="col-md-6 col-lg-3">
+          <div class="info_detail">
+            <h4>
+              About Us
+            </h4>
+            <p class="mb-0">
+              Our mission is to provide a diverse range of high-quality products at unbeatable prices, ensuring that you find exactly what you're looking for with ease.
+            </p>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-3">
+          <h4>
+            Contact Us
+          </h4>
+          <div class="info_contact">
+            <a href="https://www.google.com/maps/place/Alnamaa+Accounting+%26+Bookkeeping+LLC/@25.26615,55.3106126,17z/data=!3m1!4b1!4m6!3m5!1s0x3e5f437d2f3bcfd9:0xd213a756689e8e71!8m2!3d25.26615!4d55.3106126!16s%2Fg%2F11jjls6g16?entry=ttu" target="_blank">
+              <i class="fa fa-map-marker" aria-hidden="true"></i>
+              <span>
+                Location
+              </span>
+            </a>
+            <a href="tel:+923065516830" target="_blank">
+              <i class="fa fa-phone" aria-hidden="true"></i>
+              <span>
+                Call +923065516830
+              </span>
+            </a>
+            <a href="mailto:hacodder@gmail.com" target="_blank">
+              <i class="fa fa-envelope"></i>
+              <span>
+                hacodder@gmail.com
+              </span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- end info_section -->
+
+
+  <!-- footer section -->
+  <footer class="footer_section">
+    <div class="container">
+      <p>
+        &copy; <span id="displayYear"></span> All Rights Reserved By
+        <a href="{% url 'index' %}">Cartify</a>
+      </p>
+    </div>
+  </footer>
+  <!-- footer section -->
+
+
+  <!-- jQery -->
+  <script src="{% static 'js/jquery-3.4.1.min.js' %}"></script>
+  <!-- bootstrap js -->
+  <script src="{% static 'js/bootstrap.js' %}"></script>
+  <!-- custom js -->
+  <script src="{% static 'js/custom.js' %}"></script>
+
+  <script src="{% static 'js/same_location_page.js' %}"></script>
+
+</body>
+
+</html>
